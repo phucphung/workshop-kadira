@@ -10,7 +10,7 @@ import {Link} from 'react-router';
 // database - collection
 import {Data} from '../api/data';
 
-class Test extends Component {
+class Bad extends Component {
   constructor(props) {
     super(props);
   }
@@ -26,7 +26,7 @@ class Test extends Component {
             <div className="col s12 m7"></div>
             <div className="col s12 m5">
               <h2>KADIRA</h2>
-              <Link to="/" className="waves-effect waves-light btn light-blue darken-3">Click Here to slow down</Link>
+              <Link to="/" className="waves-effect waves-light btn light-blue darken-3">Click Here to go back</Link>
             </div>
 
           </div>
@@ -46,6 +46,6 @@ class Test extends Component {
 }
 
 export default createContainer(() => {
-  Meteor.subscribe('activities', 20000);
+  Meteor.subscribe('activities', {skip: 0, limit: 21000});
   return {activities: Data.find().fetch()};
-}, Test);
+}, Bad);

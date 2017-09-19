@@ -53,7 +53,7 @@ class App extends Component {
               <h2>List Collection items</h2>
               <List>
                 {this.props.activities.map( (activity, id)=>(
-                  <ListItem key={activity._id} primaryText={id + '. ' + activity._id} />
+                  <ListItem key={activity._id} primaryText={id + '. ' + activity.type} />
                 ))}
               </List>
               <ReactPaginate previousLabel={"previous"}
@@ -71,7 +71,7 @@ class App extends Component {
             <div className="col s12 m5">
               <h2>KADIRA</h2>
 
-              <Link to="/" className="waves-effect waves-light btn light-blue darken-3">Click Here to slow down</Link>
+              <Link to="/bad" className="waves-effect waves-light btn light-blue darken-3">Click Here to slow down</Link>
             </div>
 
           </div>
