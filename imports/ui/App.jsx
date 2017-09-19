@@ -2,17 +2,43 @@ import React, {Component, PropTypes} from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import RaisedButton from 'material-ui/RaisedButton';
 import AppBar from 'material-ui/AppBar';
-import {List} from 'material-ui/List';
+import {List, ListItem} from 'material-ui/List';
 import Divider from 'material-ui/Divider';
 import {createContainer} from 'meteor/react-meteor-data';
 import {Link} from 'react-router';
+import ReactPaginate from 'react-paginate';
 
 // database - collection
 import {Data} from '../api/data';
 
+const optionVar = new ReactiveVar(0);
+const pagelimit = 20;
+const updateSkip = (value) => {
+  optionVar.set(value);
+}
+
 class App extends Component {
   constructor(props) {
     super(props);
+    this.handlePageClick = this.handlePageClick.bind(this);
+    this.state = {
+      data: [],
+      offset: 0,
+      pageNumber: 10
+    }
+  }
+
+  componentWillReceiveProps (props){
+    const pageNumber = props.totalActivities/pagelimit;
+    this.setState({
+      pageNumber,
+    })
+  }
+
+  handlePageClick (data){
+    let selected = data.selected;
+    let offset = Math.ceil(selected * pagelimit);
+    updateSkip(offset);
   }
 
   render() {
@@ -23,10 +49,28 @@ class App extends Component {
             backgroundColor: '#027780'
           }}></AppBar>
           <div className="row">
-            <div className="col s12 m7"></div>
+            <div className="col s12 m7">
+              <h2>List Collection items</h2>
+              <List>
+                {this.props.activities.map( (activity, id)=>(
+                  <ListItem key={activity._id} primaryText={id + '. ' + activity._id} />
+                ))}
+              </List>
+              <ReactPaginate previousLabel={"previous"}
+                       nextLabel={"next"}
+                       breakLabel={<a href="">...</a>}
+                       breakClassName={"break-me"}
+                       pageCount={this.state.pageNumber}
+                       marginPagesDisplayed={2}
+                       pageRangeDisplayed={5}
+                       onPageChange={this.handlePageClick}
+                       containerClassName={"pagination"}
+                       subContainerClassName={"pages pagination"}
+                       activeClassName={"active"} />
+            </div>
             <div className="col s12 m5">
               <h2>KADIRA</h2>
-              
+
               <Link to="/" className="waves-effect waves-light btn light-blue darken-3">Click Here to slow down</Link>
             </div>
 
@@ -43,6 +87,15 @@ class App extends Component {
 }
 
 export default createContainer(() => {
-  Meteor.subscribe('activities', 20000);
-  return {activities: Data.find().fetch()};
+  const optionObj = {
+    limit: pagelimit,
+    skip: optionVar.get()
+  }
+  Meteor.subscribe('activities', optionObj);
+  return {
+    activities: Data.find().fetch(),
+    totalActivities: Counts.get('totalActivities'),
+
+  };
+
 }, App);
