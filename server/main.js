@@ -10,5 +10,8 @@ Meteor.startup(() => {
       }
     }));
     return Data.find({}, {limit: limit, skip: skip});
+  });
+  Meteor.publish('activities_bad', function(){
+    return Data.find();
   })
 });

@@ -92,6 +92,7 @@ export default createContainer(() => {
     skip: optionVar.get()
   }
   Meteor.subscribe('activities', optionObj);
+  console.log(Data.find().count());
   return {
     activities: Data.find().fetch(),
     totalActivities: Counts.get('totalActivities'),

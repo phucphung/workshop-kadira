@@ -34,7 +34,7 @@ class Bad extends Component {
             <div className="col s12">
               <List>
                 {this.props.activities.map( (activity, id)=>(
-                  <ListItem key={activity._id} primaryText={id + '. ' + activity.userId} />
+                  <ListItem key={activity._id} primaryText={id + '. ' + activity.type} />
                 ))}
               </List>
             </div>
@@ -46,6 +46,9 @@ class Bad extends Component {
 }
 
 export default createContainer(() => {
-  Meteor.subscribe('activities', {skip: 0, limit: 21000});
+  //let limit=20000+Math.round(Math.random()*1000);
+  //Meteor.subscribe('activities', {skip: 0, limit: limit});
+  Meteor.subscribe('activities_bad');
+  console.log(Data.find().count());
   return {activities: Data.find().fetch()};
 }, Bad);
