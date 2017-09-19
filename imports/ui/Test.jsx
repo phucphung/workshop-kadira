@@ -2,7 +2,7 @@ import React, {Component, PropTypes} from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import RaisedButton from 'material-ui/RaisedButton';
 import AppBar from 'material-ui/AppBar';
-import {List} from 'material-ui/List';
+import {List, ListItem} from 'material-ui/List';
 import Divider from 'material-ui/Divider';
 import {createContainer} from 'meteor/react-meteor-data';
 import {Link} from 'react-router';
@@ -10,7 +10,7 @@ import {Link} from 'react-router';
 // database - collection
 import {Data} from '../api/data';
 
-class App extends Component {
+class Test extends Component {
   constructor(props) {
     super(props);
   }
@@ -26,14 +26,17 @@ class App extends Component {
             <div className="col s12 m7"></div>
             <div className="col s12 m5">
               <h2>KADIRA</h2>
-              
               <Link to="/" className="waves-effect waves-light btn light-blue darken-3">Click Here to slow down</Link>
             </div>
 
           </div>
           <div className="row">
             <div className="col s12">
-              <br/>
+              <List>
+                {this.props.activities.map( (activity, id)=>(
+                  <ListItem key={activity._id} primaryText={id + '. ' + activity.userId} />
+                ))}
+              </List>
             </div>
           </div>
         </div>
@@ -45,4 +48,4 @@ class App extends Component {
 export default createContainer(() => {
   Meteor.subscribe('activities', 20000);
   return {activities: Data.find().fetch()};
-}, App);
+}, Test);
